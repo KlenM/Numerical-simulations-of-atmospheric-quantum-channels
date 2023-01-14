@@ -1,15 +1,13 @@
-from pathlib import Path
-
 import numpy as np
-from pyatmosphere import gpu
-
 from channels.moderate import moderate_inf, moderate_zap
 from channels.strong import strong_inf, strong_zap
 from channels.weak import weak_inf, weak_zap
+from pyatmosphere import gpu
 
-gpu.config['use_gpu'] = True
+gpu.config['use_gpu'] = False
 
-DATA_PATH = Path('./01-simulation/data')
+DATA_PATH = './data'
+SIMULATION_SAVE_STEP = 10
 CHANNELS = {
     'weak_zap': {
         'channel': weak_zap,
@@ -42,3 +40,9 @@ CHANNELS = {
         'aperture_range': [round(x, 2) for x in np.linspace(0.01, 0.50, 50)]
     },
 }
+
+# to determine the beam wandering value
+PRELIMINARY_SIMULATION_ITERATIONS = 1000
+
+# for the numerical total probability models
+R0_VALUES_COUNT = 1000

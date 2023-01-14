@@ -1,4 +1,7 @@
+__pycache__
 venv/
+.vscode/
+.isort.cfg
 *.log
 *.csv
 *.pdf
