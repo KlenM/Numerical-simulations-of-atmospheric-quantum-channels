@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from typing import List, Optional, Tuple
 
@@ -21,7 +22,7 @@ def _simulate_bw(channel: pyatm.Channel, iterations: int) -> float:
     sim = pyatm.simulations.Simulation([beam_result])
     print("Preliminary simulation...")
     sim.run()
-    print(f"Beam wandering value is {beam_result.bw:.1e} m.")
+    print(f"Beam wandering value is {beam_result.bw[0]:.1e} m.")
     return beam_result.bw[0]
 
 
@@ -37,8 +38,8 @@ def load_aperture_radiuses(channel_name: str) -> Optional[List[float]]:
 
 def load_aperture_shifts(channel_name) -> Optional[List[Tuple[float, float]]]:
     "Load aperture shifts for the numerical total probability models if exist."
-    shited_aperture_paths = list(Path(config.DATA_PATH) / channel_name /
-                                 "shifted_aperture" / "transmittance_*.csv")
+    shited_aperture_paths = list((Path(config.DATA_PATH) / channel_name /
+                                 "shifted_aperture").glob("transmittance_*.csv"))
     if not shited_aperture_paths:
         return None
 
@@ -65,3 +66,19 @@ def default_aperture_shifts(channel) -> List[Tuple[float, float]]:
     shifts_x = np.random.normal(0, bw_value, config.R0_VALUES_COUNT)
     shifts_y = np.random.normal(0, bw_value, config.R0_VALUES_COUNT)
     return [(e_round(x), e_round(y)) for x, y in zip(shifts_x, shifts_y)]
+
+def save_channel_parameters(channel_name, channel):
+    results_path = Path(config.DATA_PATH) / channel_name
+    results_path.mkdir(exist_ok=True)
+    params = {
+        "source": {"W0": channel.source.w0,
+                   "wvl": channel.source.wvl,
+                   "F0": channel.source.F0},
+        "path": {"Cn2": channel.path.phase_screen.model.Cn2,
+                 "l0": channel.path.phase_screen.model.l0,
+                 "L0": channel.path.phase_screen.model.L0,
+                 "length": channel.path.length},
+        "aperture": {"radius": channel.pupil.radius},
+    }
+    with open(results_path / "params.json", "w", encoding="utf-8") as file:
+        json.dump(params, file, indent=4)

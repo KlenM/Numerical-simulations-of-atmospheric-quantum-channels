@@ -1,51 +1,73 @@
+import json
 from pathlib import Path
 
-import ray
-import numpy as np
 import pandas as pd
+import ray
+
+import config
+import models
 
 
 @ray.remote
 def process_channel(channel_name, eta_bins=200, r0_iterations=100000,
                     transmittance_iterations=100000):
     print(f"Processing '{channel_name}' channel...")
-    transmittance_path = Path("../data") / channel_name / "transmittance.csv"
-    tracked_path = Path("../data") / channel_name / "tracked_transmittance.csv"
-    beam_data_path = Path("../data") / channel_name / "beam.csv"
-    channel_path = Path("../results") / channel_name
+    results_path = Path(config.RESULTS_PATH) / channel_name
+    data_path = Path(config.DATA_PATH) / channel_name
+    transmittance_path = data_path / "transmittance.csv"
+    tracked_path = data_path / "tracked_transmittance.csv"
+    beam_data_path = data_path / "beam.csv"
+    shifted_aperture_path = data_path / "shifted_aperture"
+    with open(data_path / "params.json", encoding="utf-8") as file:
+        channel_parameters = json.load(file)
 
     # Define models
-    numerical = NumericalModel(transmittance_path, beam_data_path,
-                               eta_bins=eta_bins)
-    models = {
+    numerical = models.NumericalModel(transmittance_path, beam_data_path,
+                                      eta_bins=eta_bins)
+    _models = {
+        # Numerical models
         "numerical": numerical,
-        "tracked_numerical": TrackedNumericalModel(
+        "tracked_numerical": models.TrackedNumericalModel(
             tracked_path, beam_data_path, eta_bins=eta_bins),
-        "elliptical_beam": EllipticalBeamModel(numerical),
-        "beam_wandering": BeamWanderingModel(numerical),
-        "lognormal": LognormalModel(numerical),
-        "total_probability": TotalProbabilityModel(numerical),
-        "beta": BetaModel(numerical),
-        "beta_total_probability": BetaTotalProbabilityModel(numerical)
+
+        # Analytical models
+        "lognormal": models.LognormalModel(numerical),
+        "beam_wandering": models.BeamWanderingModel(numerical),
+        "elliptical_beam": models.EllipticalBeamModel(numerical),
+        "total_probability": models.TotalProbabilityModel(numerical),
+        "beta": models.BetaModel(numerical),
+        "beta_total_probability": models.BetaTotalProbabilityModel(numerical),
+
+        # Semi-analytical models
+        "num_total_probability": models.NumTotalProbabilityModel(
+            shifted_aperture_path, numerical),
+        "num_beta_total_probability": models.NumBetaTotalProbabilityModel(
+            shifted_aperture_path, numerical),
+        "num_elliptical_beam": models.NumEllipticalBeamModel(numerical),
     }
 
     # Some models require explicit calculations
-    print("    Calculating 'elliptical beam' model...")
-    models["elliptical_beam"].calculate_transmittance(
+    print("    Calculating 'elliptical_beam beam' model...")
+    _models["elliptical_beam"].calculate_transmittance(
+        W0=channel_parameters["source"]["W0"],
+        iterations=transmittance_iterations
+        )
+    print("    Calculating 'num_elliptical_beam beam' model...")
+    _models["num_elliptical_beam"].calculate_transmittance(
         iterations=transmittance_iterations, grid_resolution=512)
     print("    Calculating 'total probability' model...")
-    models["total_probability"].calculate_pdt(r0_iterations)
+    _models["total_probability"].calculate_pdt(r0_iterations)
     print("    Calculating 'beta total probability' model...")
-    models["beta_total_probability"].calculate_pdt(r0_iterations)
+    _models["beta_total_probability"].calculate_pdt(r0_iterations)
 
     # Store PDT results
-    for model_name, model in models.items():
-        model_path = channel_path / model_name
+    for model_name, model in _models.items():
+        model_path = results_path / model_name
         model_path.mkdir(parents=True, exist_ok=True)
 
         for aperture in model.aperture_radiuses:
             filename = f"{str(aperture).replace('.', '_')}.csv"
-
+            print(channel_name, model_name, model.pdt.keys())
             pdt_df = pd.DataFrame(
                 model.pdt[aperture],
                 columns=['probability_density']
@@ -59,33 +81,38 @@ def process_channel(channel_name, eta_bins=200, r0_iterations=100000,
     # Store KS-values results
     ks_values = {
         model_name: model.ks_values
-        for model_name, model in models.items()
+        for model_name, model in _models.items()
         if model_name not in ['numerical', 'tracked_numerical']
     }
     ks_df = pd.DataFrame(ks_values)
     ks_df.index.name = 'aperture_radius'
-    ks_df.to_csv(channel_path / 'ks_values.csv', float_format='%.3e')
+    ks_df.to_csv(results_path / 'ks_values.csv', float_format='%.3e')
 
     # Store beam params
     beam_data = pd.read_csv(beam_data_path)
     pd.DataFrame({
         "bw2": (beam_data.mean_x**2).mean(),
         "st2": 4 * (beam_data.mean_x2.mean() - (beam_data.mean_x**2).mean()),
-        "lt2": 4 * beam_data.mean_x2.mean().mean(),
-    }, index=[0]).to_csv(channel_path / 'beam_params.csv',
+        "lt2": 4 * beam_data.mean_x2.mean(),
+    }, index=[0]).to_csv(results_path / 'beam_params.csv',
                          float_format='%.3e', index=False)
 
     print("Data has been stored.")
 
 
 def run():
-    channels = ['weak_inf', 'weak_zap',
-                'moderate_inf', 'moderate_zap',
-                'strong_inf', 'strong_zap']
+    channels = ['weak_inf', 'moderate_inf', 'strong_inf',
+                'weak_zap', 'moderate_zap', 'strong_zap']
+    # channels = ['strong_inf']
 
     processes = []
     for channel_name in channels:
-        processes.append(process_channel.remote(channel_name))
+        processes.append(process_channel.remote(
+            channel_name,
+            eta_bins=config.ETA_BINS,
+            r0_iterations=config.R0_VALUES_COUNT,
+            transmittance_iterations=config.TRANSMITTANCE_ITERATIONS,
+            ))
     ray.get(processes)
 
 

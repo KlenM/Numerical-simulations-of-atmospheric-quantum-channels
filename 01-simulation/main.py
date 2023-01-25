@@ -4,7 +4,8 @@ from pathlib import Path
 from typing import List
 
 from lib.parameters import (default_aperture_radiuses, default_aperture_shifts,
-                            load_aperture_radiuses, load_aperture_shifts)
+                            load_aperture_radiuses, load_aperture_shifts,
+                            save_channel_parameters)
 from lib.shifted_aperture import ApertureShifts, ShiftedTrackedPDTResult
 from pyatmosphere import Channel, CirclePupil, simulations
 
@@ -76,6 +77,7 @@ def run():
             default_aperture_shifts(channel_config['channel'])
             )
 
+        save_channel_parameters(channel_name, channel_config['channel'])
         results = create_results(channel_name, channel_config['channel'],
                                  aperture_radiuses, tracked_shifts,
                                  channel_config['iterations'])
