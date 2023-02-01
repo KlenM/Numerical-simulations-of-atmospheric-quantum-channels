@@ -8,6 +8,7 @@ class PlotParams:
     label: Optional[str] = None
     color: str = "k"
     linestyle: str = "-"
+    clip_tails: float = 0.1
     smooth: float = 0
     ks_smooth: float = 0
     label_pos: int = 0
@@ -58,7 +59,7 @@ class EllipticalBeamPlotParams(PlotParams):
 @dataclass
 class TotalProbabilityPlotParams(PlotParams):
     name: str = "total_probability"
-    label: Optional[str] = "T_L"
+    label: Optional[str] = "$\\mathsf{T_L}$"
     color: str = "#00897b"
     zorder: int = 3
 
@@ -72,7 +73,7 @@ class BetaPlotParams(PlotParams):
 @dataclass
 class BetaTotalProbabilityPlotParams(PlotParams):
     name: str = "beta_total_probability"
-    label: Optional[str] = "T_B"
+    label: Optional[str] = "$\\mathsf{T_B}$"
     color: str = "#e28544"
     zorder: int = 5
 
@@ -80,7 +81,7 @@ class BetaTotalProbabilityPlotParams(PlotParams):
 @dataclass
 class NumTotalProbabilityPlotParams(PlotParams):
     name: str = "num_total_probability"
-    label: Optional[str] = "T_L"
+    label: Optional[str] = "$\\mathsf{T_L}$"
     color: str = "#00897b"
     linestyle: str = "--"
     zorder: int = 3
@@ -88,7 +89,7 @@ class NumTotalProbabilityPlotParams(PlotParams):
 @dataclass
 class NumBetaTotalProbabilityPlotParams(PlotParams):
     name: str = "num_beta_total_probability"
-    label: Optional[str] = "T_B"
+    label: Optional[str] = "$\\mathsf{T_B}$"
     color: str = "#e28544"
     linestyle: str = "--"
     zorder: int = 5

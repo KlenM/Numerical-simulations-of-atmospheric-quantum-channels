@@ -1,3 +1,4 @@
+import dataclasses
 import numpy as np
 import pandas as pd
 from scipy.ndimage import gaussian_filter1d
@@ -12,6 +13,7 @@ def plot_pdt(ax, channel_name, aperture_radius, models):
     channel_path = config.RESULTS_PATH / channel_name
     file_name = str(aperture_radius).replace('.', '_') + '.csv'
     for model in models:
+        model = dataclasses.asdict(model)
         if model['name'] not in available_models:
             print("ERROR: '%s' model for the '%s' channel not found" %
                   (model['name'], channel_name))
@@ -19,12 +21,12 @@ def plot_pdt(ax, channel_name, aperture_radius, models):
         df = pd.read_csv(channel_path / model['name'] / file_name)
 
         # Smooth data
-        if 'smooth' in model:
+        if model['smooth'] != 0:
             df['probability_density'] = gaussian_filter1d(
                 df['probability_density'], model['smooth'])
 
         # Clip tails
-        tails_mask = df['probability_density'] > model.get('clip_tails', 0.01)
+        tails_mask = df['probability_density'] > model['clip_tails']
         eta_axis = df['transmittance'][tails_mask].tolist()
         data = df['probability_density'][tails_mask].tolist()
         if model['name'] == 'beam_wandering':
@@ -35,20 +37,19 @@ def plot_pdt(ax, channel_name, aperture_radius, models):
                 ls=model['linestyle'], zorder=model['zorder'])
 
         # Circle labels
-        label = model.get('label')
-        if label:
-            color = model['plot_kwargs'].get('color', 'black')
-            label_pos = model.get('label_pos',
-                                  np.random.randint(0, len(eta_axis)))
-            label_dx = model.get('label_dx', 0)
-            label_dy = model.get('label_dy', 0)
-            ax.scatter([eta_axis[label_pos]], [data[label_pos]], s=100,
+        if model['label']:
+            color = model['color']
+            # label_pos = model.get('label_pos', np.random.randint(0, len(eta_axis)))
+            label_x = df['transmittance'][model['label_pos']]
+            label_y = df['probability_density'][model['label_pos']]
+            ax.scatter([label_x], [label_y], s=100,
                        marker="o", zorder=10, clip_on=False, linewidth=1.2,
                        edgecolor=color, facecolor="white")
-            ax.text(eta_axis[label_pos] + label_dx,
-                    0.99 * data[label_pos] + label_dy, label, zorder=20,
-                    color=color, ha="center", va="center", size="x-small",
-                    clip_on=False, weight='bold', fontfamily='sans-serif')
+            ax.text(label_x + model['label_dx'],
+                    0.99 * label_y + model['label_dy'], model['label'],
+                    zorder=20, color=color, ha="center", va="center",
+                    size="x-small", clip_on=False, weight='bold',
+                    fontfamily='sans-serif')
 
     ax.grid(which='major', color='#BBBBBB', linestyle='-')
     ax.set_ylabel("Probability distribution")
@@ -66,7 +67,7 @@ def plot_ks_values(ax, channel_name, models):
     lt2 = beam_df['lt2'][0]
 
     for model in models:
-        model = model.asdict()
+        model = dataclasses.asdict(model)
         if model['name'] not in available_models:
             print("ERROR: '%s' model for the '%s' channel not found" %
                   (model['name'], channel_name))
@@ -75,11 +76,10 @@ def plot_ks_values(ax, channel_name, models):
         _normed_x = (ks_values_df['aperture_radius'] / np.sqrt(lt2)).tolist()
 
         # Smooth data
-        if 'ks_smooth' in model:
+        if model['ks_smooth'] != 0:
             normed_x = np.linspace(min(_normed_x), max(_normed_x), 200)
-            f = interp1d(_normed_x, ks_values_df[model['name']])
-            data = gaussian_filter1d(f(normed_x),
-                                     model['ks_smooth'])
+            func = interp1d(_normed_x, ks_values_df[model['name']])
+            data = gaussian_filter1d(func(normed_x), model['ks_smooth'])
         else:
             data = ks_values_df[model['name']]
             normed_x = _normed_x
@@ -90,20 +90,18 @@ def plot_ks_values(ax, channel_name, models):
                 ls=model['linestyle'], zorder=model['zorder'])
 
         # Circle labels
-        label = model.get('label')
-        if 'label' in model:
-            color = model['plot_kwargs'].get('color', 'black')
-            label_pos = model.get('label_pos',
-                                  np.random.randint(0, len(normed_x)))
-            label_dx = model.get('label_dx', 0)
-            label_dy = model.get('label_dy', 0)
-            ax.scatter([normed_x[label_pos]], [data[label_pos]], s=100,
+        if model['label']:
+            # label_pos = model.get('label_pos', np.random.randint(0, len(normed_x)))
+            label_x = _normed_x[model['label_pos']]
+            label_y = ks_values_df[model['name']][model['label_pos']]
+            ax.scatter([label_x], [label_y], s=100,
                        marker="o", zorder=10, clip_on=False, linewidth=1.2,
-                       edgecolor=color, facecolor="white")
-            ax.text(normed_x[label_pos] + label_dx,
-                    0.985 * data[label_pos] + label_dy, label, zorder=20,
-                    color=color, ha="center", va="center", size="x-small",
-                    clip_on=False, weight='bold', fontfamily='sans-serif')
+                       edgecolor=model['color'], facecolor="white")
+            ax.text(label_x + model['label_dx'],
+                    0.985 * label_y + model['label_dy'], model['label'],
+                    zorder=20, color=model['color'], ha="center", va="center",
+                    size="x-small",clip_on=False, weight='bold',
+                    fontfamily='sans-serif')
 
     secax = ax.secondary_xaxis(
         1, functions=(lambda x: x * np.sqrt(lt2) * 100, lambda r: r)

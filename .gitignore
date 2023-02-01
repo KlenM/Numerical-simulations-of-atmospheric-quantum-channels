@@ -1,8 +1,10 @@
 __pycache__
 venv
 .vscode
+.trash
 .isort.cfg
 *.log
-*.csv
 *.json
 *.pdf
+
+01-simulation/data/
