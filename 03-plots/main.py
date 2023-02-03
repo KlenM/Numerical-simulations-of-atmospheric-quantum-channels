@@ -23,9 +23,9 @@ def pdt_weak_zap_channel():
     plot_file_name = plot_pdt(
         ax, channel_name, aperture_radius,
         models=[
-            NumericalPlotParams(smooth=1.2, label_pos=152, label_dy=0.02),
+            NumericalPlotParams(smooth=1.2, label_pos=152, label_dy=0.0011, label_dx=0.001),
             LognormalPlotParams(ks_smooth=1, label_pos=125, label_dy=0.015),
-            BetaPlotParams(ks_smooth=1, label_pos=122, label_dy=0.005),
+            BetaPlotParams(ks_smooth=1, label_pos=122, label_dy=0.005, label_dx=0.001),
             EllipticalBeamPlotParams(
                 smooth=2.5, ks_smooth=4, label_pos=124, label_dy=0.025),
             # NumEllipticalBeamPlotParams(
@@ -52,9 +52,8 @@ def pdt_weak_inf_channel():
         models=[
             NumericalPlotParams(smooth=1.2, label_pos=153, label_dy=0.035),
             LognormalPlotParams(ks_smooth=1, label_pos=153, label_dy=0.015),
-            BetaPlotParams(ks_smooth=1, label_pos=155, label_dy=0.005),
-            BeamWanderingPlotParams(
-                ks_smooth=4, label_pos=122, label_dy=-0.045),
+            BetaPlotParams(ks_smooth=1, label_pos=155, label_dy=0.02, label_dx=-0.0001),
+            BeamWanderingPlotParams(ks_smooth=4, label_pos=126, label_dy=-0.018, label_dx=0.0005),
             # EllipticalBeamPlotParams(
             #     smooth=2.5, ks_smooth=4, label_pos=124, label_dy=0.025),
             # NumEllipticalBeamPlotParams(
@@ -78,8 +77,8 @@ def pdt_moderate_channels():
     _ = plot_pdt(
         ax, 'moderate_zap', aperture_radius=aperture_radius,
         models=[
-            NumericalPlotParams(smooth=2.2, label=None, linestyle='-.'),
-            TrackedNumericalPlotParams(smooth=1.2, label=None, linestyle='-.'),
+            NumericalPlotParams(smooth=2.2, label=None),
+            TrackedNumericalPlotParams(smooth=1.2, label=None),
             ])
     plot_file_name = plot_pdt(
         ax, 'moderate_inf', aperture_radius=aperture_radius,
@@ -138,7 +137,7 @@ def pdt_strong_zap_channel():
     _ = plot_pdt(axs[3], channel_name, aperture_radius=aperture_radiuses[3],
         models=[
             NumericalPlotParams(smooth=2.2, label_pos=151, label_dy=-0.04),
-            BeamWanderingPlotParams(ks_smooth=4, label_pos=78, label_dy=-0.08),
+            BeamWanderingPlotParams(ks_smooth=4, label_pos=120, label_dy=-0.08),
         ])
 
     for i, ax in enumerate(axs):
@@ -168,18 +167,17 @@ def ks_weak_zap_channel():
     _, ax = plt.subplots(1, 1, figsize=(4, 3))
     plot_ks_values(ax, channel_name,
         models=[
-            LognormalPlotParams(ks_smooth=1, label_pos=14),
-            BeamWanderingPlotParams(
-                ks_smooth=4, label_pos=17, label_dy=-0.007),
-            EllipticalBeamPlotParams(ks_smooth=4, label_pos=14),
-            BetaPlotParams(ks_smooth=1, label_pos=15),
-            TotalProbabilityPlotParams(
-                ks_smooth=1, label_pos=11, label_dy=-0.0005),
-            BetaTotalProbabilityPlotParams(label_pos=17),
-            NumTotalProbabilityPlotParams(label_pos=17),
-            NumBetaTotalProbabilityPlotParams(label_pos=17),
+            LognormalPlotParams(label_pos=18),
+            BeamWanderingPlotParams(ks_smooth=4, label_pos=17, label_dy=-0.003),
+            EllipticalBeamPlotParams(ks_smooth=4, label_pos=23),
+            BetaPlotParams(label_pos=13),
+            TotalProbabilityPlotParams(ks_smooth=1, label_pos=15),
+            BetaTotalProbabilityPlotParams(ks_smooth=2, label_pos=17),
+            # NumEllipticalBeamPlotParams(ks_smooth=1, label_pos=30),
+            NumTotalProbabilityPlotParams(ks_smooth=4, label_pos=26),
+            NumBetaTotalProbabilityPlotParams(ks_smooth=4, label_pos=34),
             ])
-    ax.set_ylim(0.008, 1)
+    ax.set_ylim(0.006, 1)
     plt.savefig(config.PLOTS_PATH / 'weak_zap_ks_values.pdf',
                 **config.SAVEFIG_KWARGS)
 
@@ -192,19 +190,15 @@ def ks_weak_inf_channel():
     plot_ks_values(
         ax, channel_name,
         models=[
-            LognormalPlotParams(
-                ks_smooth=1, label_pos=19, label_dy=-0.0002),
-            BeamWanderingPlotParams(
-                ks_smooth=4, label_pos=25, label_dy=-0.007),
-            EllipticalBeamPlotParams(
-                ks_smooth=4, label_pos=23, label_dy=-0.002),
-            BetaPlotParams(
-                ks_smooth=1, label_pos=10, label_dy=-0.00004),
-            TotalProbabilityPlotParams(
-                ks_smooth=1, label_pos=16, label_dy=-0.0005),
-            BetaTotalProbabilityPlotParams(label_pos=17),
-            NumTotalProbabilityPlotParams(label_pos=17),
-            NumBetaTotalProbabilityPlotParams(label_pos=17),
+            LognormalPlotParams(label_pos=21, label_dy=-0.0002),
+            BeamWanderingPlotParams(ks_smooth=5, label_pos=25, label_dy=-0.007),
+            EllipticalBeamPlotParams(ks_smooth=4, label_pos=23, label_dy=-0.002),
+            BetaPlotParams(ks_smooth=1, label_pos=11, label_dy=-0.00004),
+            TotalProbabilityPlotParams(ks_smooth=4, label_pos=12, label_dy=-0.0005),
+            BetaTotalProbabilityPlotParams(ks_smooth=4, label_pos=17),
+            NumEllipticalBeamPlotParams(ks_smooth=4, label_pos=28),
+            NumTotalProbabilityPlotParams(ks_smooth=4, label_pos=24),
+            NumBetaTotalProbabilityPlotParams(ks_smooth=4, label_pos=21),
             ])
     ax.set_ylim(0.001, 1)
     plt.savefig(config.PLOTS_PATH / 'weak_inf_ks_values.pdf',
@@ -219,18 +213,17 @@ def ks_moderate_zap_channel():
     plot_ks_values(
         ax, channel_name,
         models=[
-            LognormalPlotParams(ks_smooth=1, label_pos=23),
-            BeamWanderingPlotParams(
-                ks_smooth=4, label_pos=24, label_dy=-0.003),
-            EllipticalBeamPlotParams(ks_smooth=4, label_pos=18),
-            BetaPlotParams(ks_smooth=1, label_pos=20),
-            TotalProbabilityPlotParams(
-                ks_smooth=1, label_pos=18, label_dy=-0.0005),
-            BetaTotalProbabilityPlotParams(label_pos=17),
-            NumTotalProbabilityPlotParams(label_pos=17),
-            NumBetaTotalProbabilityPlotParams(label_pos=17),
+            LognormalPlotParams(label_pos=5),
+            BeamWanderingPlotParams(ks_smooth=2, label_pos=24, label_dy=-0.003),
+            EllipticalBeamPlotParams(ks_smooth=1, label_pos=29),
+            BetaPlotParams(label_pos=9),
+            TotalProbabilityPlotParams(ks_smooth=1, label_pos=10, label_dy=-0.0005),
+            BetaTotalProbabilityPlotParams(label_pos=19),
+            NumEllipticalBeamPlotParams(ks_smooth=4, label_pos=34),
+            NumTotalProbabilityPlotParams(ks_smooth=4, label_pos=42),
+            NumBetaTotalProbabilityPlotParams(ks_smooth=4, label_pos=38),
             ])
-    ax.set_ylim(0.02, 1)
+    ax.set_ylim(0.009, 1)
     plt.savefig(config.PLOTS_PATH / 'moderate_zap_ks_values.pdf',
                 **config.SAVEFIG_KWARGS)
 
@@ -243,15 +236,15 @@ def ks_strong_zap_channel():
     plot_ks_values(
         ax, channel_name,
         models=[
-            LognormalPlotParams(ks_smooth=1, label_pos=22),
-            BeamWanderingPlotParams(
-                ks_smooth=4, label_pos=24, label_dy=-0.003),
-            EllipticalBeamPlotParams(ks_smooth=4, label_pos=18),
-            BetaPlotParams(ks_smooth=1, label_pos=12),
-            TotalProbabilityPlotParams(ks_smooth=1, label_pos=18),
-            BetaTotalProbabilityPlotParams(label_pos=14),
-            NumTotalProbabilityPlotParams(label_pos=17),
-            NumBetaTotalProbabilityPlotParams(label_pos=21),
+            LognormalPlotParams(ks_smooth=1, label_pos=23),
+            BeamWanderingPlotParams(ks_smooth=4, label_pos=24, label_dy=-0.003),
+            EllipticalBeamPlotParams(ks_smooth=1, label_pos=10),
+            BetaPlotParams(ks_smooth=2, label_pos=10),
+            TotalProbabilityPlotParams(ks_smooth=1, label_pos=19),
+            BetaTotalProbabilityPlotParams(ks_smooth=1, label_pos=12),
+            NumEllipticalBeamPlotParams(label_pos=15),
+            NumTotalProbabilityPlotParams(label_pos=41),
+            NumBetaTotalProbabilityPlotParams(label_pos=36),
             ])
     ax.set_ylim(0.02, 1)
     plt.savefig(config.PLOTS_PATH / 'strong_zap_ks_values.pdf',
@@ -260,52 +253,15 @@ def ks_strong_zap_channel():
 
 def run():
     config.PLOTS_PATH.mkdir(exist_ok=True)
-    # pdt_weak_zap_channel()
+    pdt_weak_zap_channel()
     pdt_weak_inf_channel()
-    # pdt_moderate_channels()
-    # pdt_strong_zap_channel()
-    # ks_weak_zap_channel()
-    # ks_weak_inf_channel()
-    # ks_moderate_zap_channel()
-    # ks_strong_zap_channel()
+    pdt_moderate_channels()
+    pdt_strong_zap_channel()
+    ks_weak_zap_channel()
+    ks_weak_inf_channel()
+    ks_moderate_zap_channel()
+    ks_strong_zap_channel()
 
 
 if __name__ == "__main__":
     run()
-
-
-# models = {
-#     'numerical': {
-#         'name': 'numerical', 'label': 'N', 'smooth': 1.2,
-#         'plot_kwargs': {'color': '#000000', 'ls': '-', 'zorder': 8},
-#     },
-#     'tracked_numerical': {
-#         'name': 'tracked_numerical', 'label': 'R', 'smooth': 1.2,
-#         'plot_kwargs': {'color': '#555555', 'ls': '--', 'zorder': 7},
-#     },
-#     'lognormal': {
-#         'name': 'lognormal', 'label': 'L', 'ks_smooth': 1,
-#         'plot_kwargs': {'color': '#e53935', 'linestyle': '-', 'zorder': 4},
-#     },
-#     'beam_wandering': {
-#         'name': 'beam_wandering', 'label': 'W', 'ks_smooth': 4,
-#         'plot_kwargs': {'color': '#fb8c00', 'linestyle': '-', 'zorder': 1},
-#     },
-#     'elliptical_beam': {
-#         'name': 'elliptical_beam', 'label': 'E',
-#         'smooth': 2.5, 'ks_smooth': 4,
-#         'plot_kwargs': {'color': '#d81b60', 'linestyle': '-', 'zorder': 2},
-#     },
-#     'total_probability': {
-#         'name': 'total_probability', 'label': 'T', 'ks_smooth': 1,
-#         'plot_kwargs': {'color': '#00897b', 'linestyle': '-', 'zorder': 3},
-#     },
-#     'beta': {
-#         'name': 'beta', 'label': 'B', 'ks_smooth': 1,
-#         'plot_kwargs': {'color': '#3949ab', 'linestyle': '-', 'zorder': 6},
-#     },
-#     'beta_total_probability': {
-#         'name': 'beta_total_probability', 'label': 'P', 'ks_smooth': 1,
-#         'plot_kwargs': {'color': '#e28544', 'linestyle': '-', 'zorder': 5},
-#     },
-# }
