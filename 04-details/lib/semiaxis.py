@@ -47,7 +47,7 @@ def W2_1_W2_2_plot(ax, channel_name, range: Optional[Tuple[float, float]] = None
         data.W2_i(channel_name)['W2_1'],
         data.W2_i(channel_name)['W2_2'],
         ax, edgecolor='k', n_std=2.0, ls=(0, (14, 11)), zorder=10)
-    ax.set_aspect('equal', 'datalim')
+    ax.set_aspect('equal', 'box')
     ax.set_ylabel("Square of semiaxis $W^2_1$ (m)")
     ax.set_xlabel("Square of semiaxis $W^2_2$ (m)")
 
@@ -61,9 +61,13 @@ def theta_1_theta_2_plot(ax, channel_name, range: Optional[Tuple[float, float]] 
         data.theta_i(channel_name)['theta_1'],
         data.theta_i(channel_name)['theta_2'],
         ax, edgecolor='k', n_std=2.0, ls=(0, (14, 11)), zorder=10)
-    ax.set_aspect('equal', 'datalim')
-    ax.set_ylabel(r"??? $\theta_1$ (m)")
-    ax.set_xlabel(r"Logarithm of squared semiaxis $\theta_2$ (m)")
+    ax.set_aspect('equal', 'box') #datalim
+    ax.set_box_aspect(1)
+    ticks = ax.get_yticks()[::2]
+    ax.set_yticks(ticks)
+    ax.set_xticks(ticks)
+    ax.set_xlabel(r"$\Theta_1 = \mathrm{ln} W_1^2 / W_0^2$")
+    ax.set_ylabel(r"$\Theta_2 = \mathrm{ln} W_2^2 / W_0^2$")
 
 
 def rotated_theta_1_theta_2_correlation(channel_name):

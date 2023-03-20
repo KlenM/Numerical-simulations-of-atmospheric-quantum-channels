@@ -10,8 +10,8 @@ def r0_eta_correlation(channel_name: str, is_tracked=False):
     normed_apertures = apertures / np.sqrt(data.lt2(channel_name))
     return normed_apertures, correlation
 
-def r0_eta_correlation_plot(ax, channel_name: str, is_tracked=False):
-    ax.plot(*r0_eta_correlation(channel_name, is_tracked), label=channel_name)
+def r0_eta_correlation_plot(ax, channel_name: str, is_tracked=False, **kwargs):
+    ax.plot(*r0_eta_correlation(channel_name, is_tracked), label=channel_name, **kwargs)
     ax.set_xlabel(r"Normed aperture radius $R_\mathrm{ap} / \sigma_\mathrm{LT}$")
     ax.set_ylabel("Pearson corr for $r_0$ and $\eta$")
     return ax

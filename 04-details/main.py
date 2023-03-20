@@ -48,19 +48,24 @@ def print_x0_W2i_correlation():
 
 
 def plot_r0_eta_correlation():
+    KWARGS = {
+        'weak_inf': {'ls': '-', 'c': 'k'}, 'weak_zap': {'ls': '-', 'c': 'grey'},
+        'moderate_inf': {'ls': (0, (14, 4)), 'c': 'k'}, 'moderate_zap': {'ls': (0, (14, 4)), 'c': 'grey'},
+        'strong_inf': {'ls': '--', 'c': 'k'}, 'strong_zap': {'ls': '--', 'c': 'grey'},
+        }
+
     # Untracked
     _, ax = plt.subplots(1, 1, figsize=(4, 3))
     for channel_name in CHANNELS[:]:
-        r0_eta.r0_eta_correlation_plot(ax, channel_name)
-    plt.legend()
+        r0_eta.r0_eta_correlation_plot(ax, channel_name, **KWARGS[channel_name])
     plt.savefig(config.PLOTS_PATH / ('r_0_eta.pdf'),
                 **config.SAVEFIG_KWARGS)
 
     # Tracked
     _, ax = plt.subplots(1, 1, figsize=(4, 3))
     for channel_name in CHANNELS[:]:
-        r0_eta.r0_eta_correlation_plot(ax, channel_name, is_tracked=True)
-    plt.legend()
+        r0_eta.r0_eta_correlation_plot(ax, channel_name, is_tracked=True, **KWARGS[channel_name])
+    plt.ylim(-0.11, 0.01)
     plt.savefig(config.PLOTS_PATH / ('r_0_eta_tracked.pdf'),
                 **config.SAVEFIG_KWARGS)
 
