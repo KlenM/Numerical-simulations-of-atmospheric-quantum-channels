@@ -114,7 +114,8 @@ def pdt_strong_zap_channel():
     aperture_radiuses = [0.06, 0.1, 0.14, 0.32]
 
     print(f"Plotting pdt of '{channel_name}' channel, a: {aperture_radiuses}.")
-    _, axs = plt.subplots(1, 4, figsize=(10, 2.2))
+    fig, axs = plt.subplots(2, 2, figsize=(4, 4.4))
+    axs = [*axs[0], *axs[1]]
     _ = plot_pdt(axs[0], channel_name, aperture_radius=aperture_radiuses[0],
         models=[
             NumericalPlotParams(smooth=2.2, label_pos=72, label_dy=-0.05),
@@ -137,7 +138,7 @@ def pdt_strong_zap_channel():
         ])
 
     for i, ax in enumerate(axs):
-        if i != 0:
+        if (i + 1) % 2 == 0:
             axs[i].set_ylabel(None)  # type: ignore
         if i in [1, 2]:
             ax.set_ylim(0, 5)
@@ -146,12 +147,18 @@ def pdt_strong_zap_channel():
             ax.set_yticks([0, 2, 4, 6, 8, 10, 12, 14])
         ax.set_xlim(0, 1)
         ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
-        ax.set_xticklabels(['0.0', 0.25, 0.5, 0.75, '1.0'])
+        if i < 2:
+            ax.set_xticklabels([])
+            axs[i].set_xlabel(None)  # type: ignore
+        else:
+            ax.set_xticklabels(['0.0', 0.25, 0.5, 0.75, '1.0'])
         ax.text(
             0.105,  0.89,
             f"${RAP_SYM} = {aperture_radiuses[i] * 100:.0f}$ cm",
             transform=ax.transAxes
         )
+    fig.align_ylabels([axs[0], axs[2]])
+    plt.subplots_adjust(hspace=0.14)
     plt.savefig(config.PLOTS_PATH / 'strong_zap_pdt.pdf',
                 **config.SAVEFIG_KWARGS)
 
