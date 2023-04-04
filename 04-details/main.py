@@ -47,17 +47,44 @@ def print_x0_W2i_correlation():
     print(json.dumps(res, indent=4))
 
 
-def plot_r0_eta_correlation():
+def plot_r0_eta_correlation(annotations=None):
     KWARGS = {
-        'weak_inf': {'ls': '-', 'c': 'k'}, 'weak_zap': {'ls': '-', 'c': 'grey'},
-        'moderate_inf': {'ls': (0, (14, 4)), 'c': 'k'}, 'moderate_zap': {'ls': (0, (14, 4)), 'c': 'grey'},
-        'strong_inf': {'ls': '--', 'c': 'k'}, 'strong_zap': {'ls': '--', 'c': 'grey'},
+        'weak_inf': {'ls': '-', 'c': '#e53935'}, 'weak_zap': {'ls': '--', 'c': '#e53935'},
+        'moderate_inf': {'ls': '-', 'c': '#3949ab'}, 'moderate_zap': {'ls': '--', 'c': '#3949ab'},
+        'strong_inf': {'ls': '-', 'c': '#00897b'}, 'strong_zap': {'ls': '--', 'c': '#00897b'},
         }
+    ANNOTATIONS = {
+        'untracked': {
+            "$\\mathrm{W}_{+\\infty}$": {"text_pos": [-30, -30], "arrow_pos": [0.53, -0.45], "angle_coeff": -1},
+            "$\\mathrm{W}_{z_\\mathrm{ap}}$": {"text_pos": [25, -15], "arrow_pos": [1.374, -0.71]},
+            "$\\mathrm{M}_{+\\infty}$": {"text_pos": [5, 20], "arrow_pos": [0.47, -0.79]},
+            "$\\mathrm{M}_{z_\\mathrm{ap}}$": {"text_pos": [25, -15], "arrow_pos": [0.78, -0.87]},
+            "$\\mathrm{S}_{+\\infty}$": {"text_pos": [5, 20], "arrow_pos": [0.23, -0.75]},
+            "$\\mathrm{S}_{z_\\mathrm{ap}}$": {"text_pos": [-27, 20], "arrow_pos": [0.23, -0.77], "angle_coeff": -1}
+        },
+        'tracked': {
+            "$\\mathrm{W}_{+\\infty}$": {"text_pos": [26.5, 10], "arrow_pos": [1.13, -0.008], "angle_coeff": -1},
+            "$\\mathrm{W}_{z_\\mathrm{ap}}$": {"text_pos": [10, -30], "arrow_pos": [1.45, -0.018]},
+            "$\\mathrm{M}_{+\\infty}$": {"text_pos": [-10, -30], "arrow_pos": [1.05, -0.022]},
+            "$\\mathrm{M}_{z_\\mathrm{ap}}$": {"text_pos": [-10, -30], "arrow_pos": [0.8, -0.022]},
+            "$\\mathrm{S}_{+\\infty}$": {"text_pos": [17, -24], "arrow_pos": [0.177, -0.061]},
+            "$\\mathrm{S}_{z_\\mathrm{ap}}$": {"text_pos": [20, -20], "arrow_pos": [0.17, -0.074]}
+        },
+    }
 
     # Untracked
     _, ax = plt.subplots(1, 1, figsize=(4, 3))
     for channel_name in CHANNELS[:]:
         r0_eta.r0_eta_correlation_plot(ax, channel_name, **KWARGS[channel_name])
+    for i, (ann_title, ann_params) in enumerate(ANNOTATIONS['untracked'].items()):
+        ax.annotate(
+            ann_title, tuple(ann_params['arrow_pos']),
+            xytext=tuple(ann_params['text_pos']), textcoords="offset points",
+            arrowprops={'arrowstyle': '->',
+                        'connectionstyle': f'arc3,rad={ann_params.get("angle_coeff", 1) * -0.3}',
+                        'color': ax.get_lines()[i].get_color()},
+            color=ax.get_lines()[i].get_color(),
+        )
     plt.savefig(config.PLOTS_PATH / ('r_0_eta.pdf'),
                 **config.SAVEFIG_KWARGS)
 
@@ -65,6 +92,15 @@ def plot_r0_eta_correlation():
     _, ax = plt.subplots(1, 1, figsize=(4, 3))
     for channel_name in CHANNELS[:]:
         r0_eta.r0_eta_correlation_plot(ax, channel_name, is_tracked=True, **KWARGS[channel_name])
+    for i, (ann_title, ann_params) in enumerate(ANNOTATIONS['tracked'].items()):
+        ax.annotate(
+            ann_title, tuple(ann_params['arrow_pos']),
+            xytext=tuple(ann_params['text_pos']), textcoords="offset points",
+            arrowprops={'arrowstyle': '->',
+                        'connectionstyle': f'arc3,rad={ann_params.get("angle_coeff", 1) * -0.3}',
+                        'color': ax.get_lines()[i].get_color()},
+            color=ax.get_lines()[i].get_color(),
+        )
     plt.ylim(-0.11, 0.01)
     plt.savefig(config.PLOTS_PATH / ('r_0_eta_tracked.pdf'),
                 **config.SAVEFIG_KWARGS)
