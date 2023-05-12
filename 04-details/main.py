@@ -21,6 +21,7 @@ def plot_beam_centroids_distribution():
     for channel_name in CHANNELS:
         _, ax = plt.subplots(1, 1, figsize=(4, 3))
         beam_centroid.beam_centroid_distribution_plot(ax, channel_name)
+        ax.grid(which='major', color='#BBBBBB', linestyle='-')
         plt.savefig(config.PLOTS_PATH / ('bw_' + channel_name + '.pdf'),
                     **config.SAVEFIG_KWARGS)
 
@@ -36,6 +37,7 @@ def plot_r0_W2r_correlation():
     for channel_name in CHANNELS:
         _, ax = plt.subplots(1, 1, figsize=(4, 3))
         r0_w.r0_w2r_correlation_plot(ax, channel_name)
+        ax.grid(which='major', color='#BBBBBB', linestyle='-')
         plt.savefig(config.PLOTS_PATH / ('r_0_w2_r_' + channel_name + '.pdf'),
                     **config.SAVEFIG_KWARGS)
 
@@ -85,6 +87,7 @@ def plot_r0_eta_correlation(annotations=None):
                         'color': ax.get_lines()[i].get_color()},
             color=ax.get_lines()[i].get_color(),
         )
+    ax.grid(which='major', color='#BBBBBB', linestyle='-')
     plt.savefig(config.PLOTS_PATH / ('r_0_eta.pdf'),
                 **config.SAVEFIG_KWARGS)
 
@@ -102,6 +105,7 @@ def plot_r0_eta_correlation(annotations=None):
             color=ax.get_lines()[i].get_color(),
         )
     plt.ylim(-0.11, 0.01)
+    ax.grid(which='major', color='#BBBBBB', linestyle='-')
     plt.savefig(config.PLOTS_PATH / ('r_0_eta_tracked.pdf'),
                 **config.SAVEFIG_KWARGS)
 
