@@ -7,5 +7,6 @@ venv
 *.log
 *.json
 *.pdf
+local_scripts
 
 01-simulation/data/
