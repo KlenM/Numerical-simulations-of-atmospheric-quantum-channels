@@ -15,12 +15,12 @@ weak_zap = Channel(
       model=MVKModel(
         Cn2=5e-15,
         l0=1e-3,
-        L0=1e3,
+        L0=80,
       ),
       f_grid=RandLogPolarGrid(
         points=2**10,
-        f_min=1 / 1e3 / 15,
-        f_max=1 / 6e-3 * 2
+        f_min=1 / 80 / 15,
+        f_max=1 / 1e-3 * 2
       )
     ),
     length=1e3,
@@ -43,13 +43,13 @@ weak_inf = Channel(
     phase_screen=SSPhaseScreen(
       model=MVKModel(
         Cn2=5e-15,
-        l0=1e-3,
+        l0=80,
         L0=1e3,
       ),
       f_grid=RandLogPolarGrid(
         points=2**10,
-        f_min=1 / 1e3 / 15,
-        f_max=1 / 6e-3 * 2
+        f_min=1 / 80 / 15,
+        f_max=1 / 1e-3 * 2
       )
     ),
     length=1e3,
