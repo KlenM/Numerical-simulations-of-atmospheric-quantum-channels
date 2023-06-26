@@ -17,7 +17,8 @@ def create_results(
         channel: Channel,
         aperture_radiuses: List[float],
         aperture_shifts: ApertureShifts,
-        iterations: int
+        iterations: int,
+        semianalytical_iterations: int
         ) -> List[simulations.Result]:
     """Declare the required results for a simultaion.
 
@@ -28,6 +29,8 @@ def create_results(
         aperture_shifts: list of r_0 values for
                          the numerical total probability PDT models
         iterations: the required number of simulation iterations
+        semianalytical_iterations: the required number of simulation iterations
+                                   for semianalytical models
 
     Returns:
         a list of pyatmosphere simulation results
@@ -58,7 +61,7 @@ def create_results(
             aperture_shifts=aperture_shifts,
             save_path=(results_path / 'shifted_aperture' /
                        f"transmittance_{aperture.radius}.csv"),
-            max_size=iterations
+            max_size=semianalytical_iterations
             )
             for aperture in apertures]
     ]
@@ -80,7 +83,8 @@ def run():
         save_channel_parameters(channel_name, channel_config['channel'])
         results = create_results(channel_name, channel_config['channel'],
                                  aperture_radiuses, tracked_shifts,
-                                 channel_config['iterations'])
+                                 channel_config['iterations'],
+                                 config.SEMIANALYTICAL_ITERATIONS)
         sim = simulations.Simulation(results)
 
         # A loop for the ability to get an intermediate output plot with
