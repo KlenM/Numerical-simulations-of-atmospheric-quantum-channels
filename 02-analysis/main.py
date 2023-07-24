@@ -102,8 +102,7 @@ def process_channel(channel_name, eta_bins=200, r0_iterations=100000,
 
 def run():
     channels = ['weak_inf', 'moderate_inf', 'strong_inf',
-                'weak_zap', 'moderate_zap', 'strong_zap']
-    # channels = ['strong_inf']
+                'weak_zap', 'moderate_zap']
 
     processes = []
     for channel_name in channels:
