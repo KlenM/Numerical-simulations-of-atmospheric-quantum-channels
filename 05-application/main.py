@@ -94,7 +94,7 @@ def _plot_squeezing_by_aperture(ax, channel_name, squeeze_in, eta_det, threshold
     ax.invert_yaxis()
     ax.set_xlim(left=0)
     ax.set_ylabel('Squeezing (dB)')
-    ax.set_xlabel("Normed aperture radius "
+    ax.set_xlabel("Normalized aperture radius "
                   "$R_{{\\mathrm{{ap}}}} / W_{{\\mathrm{{LT}}}}$", labelpad=3)
     secax = ax.secondary_xaxis(
         1, functions=(lambda x: x * np.sqrt(lt2) * 100, lambda r: r)
@@ -151,7 +151,7 @@ if __name__ == "__main__":
                             EllipticalBeamPlotParams(label_pos=75), LognormalPlotParams(label_pos=35),
                             NumericalPlotParams(label_pos=20), BetaPlotParams(label_pos=87)]},
         'strong_inf': {'aperture_radius': 0.14, 'max_eta': 0.87, 'eta_det': 10**(-LOSSES_PER_KM * 10.2 / 10) * OPRICAL_SYSTEM_LOSSES},
-        'strong_zap': {'aperture_radius': 0.14, 'max_eta': 0.87, 'eta_det': 10**(-LOSSES_PER_KM * 10.2 / 10) * OPRICAL_SYSTEM_LOSSES},
+        # 'strong_zap': {'aperture_radius': 0.14, 'max_eta': 0.87, 'eta_det': 10**(-LOSSES_PER_KM * 10.2 / 10) * OPRICAL_SYSTEM_LOSSES},
     }
     for channel_name, cp in CHANNEL_PARAMS.items():
         plot_squeezing(channel_name, SQUEEZE_IN, **cp)

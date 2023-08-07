@@ -7,7 +7,7 @@ from lib import beam_centroid, r0_w, r0_eta, semiaxis
 import config
 
 
-CHANNELS = ['weak_inf', 'weak_zap', 'moderate_inf', 'moderate_zap', 'strong_inf', 'strong_zap']
+CHANNELS = ['weak_inf', 'weak_zap', 'moderate_inf', 'moderate_zap', 'strong_inf']
 
 
 def print_beam_centroid_cumulants():
@@ -53,7 +53,7 @@ def plot_r0_eta_correlation(annotations=None):
     KWARGS = {
         'weak_inf': {'ls': '-', 'c': '#e53935'}, 'weak_zap': {'ls': '--', 'c': '#e53935'},
         'moderate_inf': {'ls': '-', 'c': '#3949ab'}, 'moderate_zap': {'ls': '--', 'c': '#3949ab'},
-        'strong_inf': {'ls': '-', 'c': '#00897b'}, 'strong_zap': {'ls': '--', 'c': '#00897b'},
+        'strong_inf': {'ls': '-', 'c': '#00897b'},
         }
     ANNOTATIONS = {
         'untracked': {
@@ -62,7 +62,7 @@ def plot_r0_eta_correlation(annotations=None):
             "$\\mathrm{M}_{+\\infty}$": {"text_pos": [5, 20], "arrow_pos": [0.47, -0.79]},
             "$\\mathrm{M}_{z_\\mathrm{ap}}$": {"text_pos": [25, -15], "arrow_pos": [0.78, -0.87]},
             "$\\mathrm{S}_{+\\infty}$": {"text_pos": [5, 20], "arrow_pos": [0.23, -0.75]},
-            "$\\mathrm{S}_{z_\\mathrm{ap}}$": {"text_pos": [-27, 20], "arrow_pos": [0.23, -0.77], "angle_coeff": -1}
+            # "$\\mathrm{S}_{z_\\mathrm{ap}}$": {"text_pos": [-27, 20], "arrow_pos": [0.23, -0.77], "angle_coeff": -1}
         },
         'tracked': {
             "$\\mathrm{W}_{+\\infty}$": {"text_pos": [26.5, 10], "arrow_pos": [1.13, -0.008], "angle_coeff": -1},
@@ -70,7 +70,7 @@ def plot_r0_eta_correlation(annotations=None):
             "$\\mathrm{M}_{+\\infty}$": {"text_pos": [-10, -30], "arrow_pos": [1.05, -0.022]},
             "$\\mathrm{M}_{z_\\mathrm{ap}}$": {"text_pos": [-10, -30], "arrow_pos": [0.8, -0.022]},
             "$\\mathrm{S}_{+\\infty}$": {"text_pos": [17, -24], "arrow_pos": [0.177, -0.061]},
-            "$\\mathrm{S}_{z_\\mathrm{ap}}$": {"text_pos": [20, -20], "arrow_pos": [0.17, -0.074]}
+            # "$\\mathrm{S}_{z_\\mathrm{ap}}$": {"text_pos": [20, -20], "arrow_pos": [0.17, -0.074]}
         },
     }
 
@@ -120,7 +120,7 @@ def print_rotated_theta_i():
 def plot_W2_i_distribution():
     RANGES = {'weak_inf': (0.0003, 0.0011), 'weak_zap': (0.00016, 0.00035),
               'moderate_inf': (0.0008, 0.0038), 'moderate_zap': (0.0007, 0.0023),
-              'strong_inf': (0.055, 0.16), 'strong_zap': (0.055, 0.16)}
+              'strong_inf': (0.055, 0.16)}
     for channel_name in CHANNELS:
         _, ax = plt.subplots(1, 1, figsize=(4, 3))
         semiaxis.W2_1_W2_2_plot(ax, channel_name, range=RANGES.get(channel_name))
@@ -131,7 +131,7 @@ def plot_W2_i_distribution():
 def plot_theta_i_distribution():
     RANGES = {'weak_inf': (-0.16, 1), 'weak_zap': (-0.9, -0.1),
               'moderate_inf': (0.65, 2.3), 'moderate_zap': (0.6, 1.8),
-              'strong_inf': (3.1, 4.3), 'strong_zap': (3.1, 4.2)}
+              'strong_inf': (5.4, 6.3)}
     for channel_name in CHANNELS:
         _, ax = plt.subplots(1, 1, figsize=(4, 3))
         semiaxis.theta_1_theta_2_plot(ax, channel_name, range=RANGES.get(channel_name))

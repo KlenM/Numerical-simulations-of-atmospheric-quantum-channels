@@ -12,6 +12,6 @@ def r0_eta_correlation(channel_name: str, is_tracked=False):
 
 def r0_eta_correlation_plot(ax, channel_name: str, is_tracked=False, **kwargs):
     ax.plot(*r0_eta_correlation(channel_name, is_tracked), label=channel_name, **kwargs)
-    ax.set_xlabel(r"Normed aperture radius $R_\mathrm{ap} / W_\mathrm{LT}$")
+    ax.set_xlabel(r"Normalized aperture radius $R_\mathrm{ap} / W_\mathrm{LT}$")
     ax.set_ylabel(r"Correlation coefficient $S(r_0, \eta)$")
     return ax

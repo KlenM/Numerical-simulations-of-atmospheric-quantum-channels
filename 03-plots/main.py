@@ -23,13 +23,13 @@ def pdt_weak_zap_channel():
     plot_file_name = plot_pdt(
         ax, channel_name, aperture_radius,
         models=[
-            NumericalPlotParams(smooth=1.2, label_pos=152, label_dy=0.0011, label_dx=0.001),
-            LognormalPlotParams(ks_smooth=1, label_pos=125, label_dy=0.015),
-            BetaPlotParams(ks_smooth=1, label_pos=122, label_dy=0.005, label_dx=0.001),
-            EllipticalBeamPlotParams(smooth=2.5, ks_smooth=4, label_pos=124, label_dy=0.025),
+            NumericalPlotParams(smooth=1.8, label_pos=145, label_dy=0.0011, label_dx=0.001),
+            LognormalPlotParams(ks_smooth=1, label_pos=115, label_dy=0.015),
+            BetaPlotParams(ks_smooth=1, label_pos=112, label_dy=0.005, label_dx=0.001),
+            EllipticalBeamPlotParams(smooth=2.5, ks_smooth=4, label_pos=110, label_dy=0.025),
             # NumEllipticalBeamPlotParams(smooth=2.5, ks_smooth=4, label_pos=125, label_dy=0.025),
             # TotalProbabilityPlotParams(label_pos=150),
-            BetaTotalProbabilityPlotParams(label_pos=151),
+            BetaTotalProbabilityPlotParams(label_pos=143),
             # NumTotalProbabilityPlotParams(label_pos=150),
             # NumBetaTotalProbabilityPlotParams(label_pos=145),
         ])
@@ -48,9 +48,9 @@ def pdt_weak_inf_channel():
     plot_file_name = plot_pdt(
         ax, channel_name, aperture_radius=aperture_radius,
         models=[
-            NumericalPlotParams(smooth=1.2, label_pos=153, label_dy=0.035),
+            NumericalPlotParams(smooth=1.9, label_pos=153, label_dy=0.035),
             LognormalPlotParams(ks_smooth=1, label_pos=153, label_dy=0.015),
-            BeamWanderingPlotParams(ks_smooth=4, label_pos=126, label_dy=-0.018, label_dx=0.0005),
+            BeamWanderingPlotParams(ks_smooth=4, label_pos=121, label_dy=-0.018, label_dx=0.0005),
             BetaPlotParams(ks_smooth=1, label_pos=155, label_dy=0.02, label_dx=-0.0001),
             # EllipticalBeamPlotParams(smooth=2.5, ks_smooth=4, label_pos=124, label_dy=0.025),
             # NumEllipticalBeamPlotParams(smooth=2.5, ks_smooth=4, label_pos=124, label_dy=0.025),
@@ -73,14 +73,14 @@ def pdt_moderate_channels():
     _ = plot_pdt(
         ax, 'moderate_zap', aperture_radius=aperture_radius,
         models=[
-            NumericalPlotParams(smooth=2.2, label=None),
-            TrackedNumericalPlotParams(smooth=1.2, label=None),
+            NumericalPlotParams(smooth=4, label=None),
+            TrackedNumericalPlotParams(smooth=3, label=None),
             ])
     plot_file_name = plot_pdt(
         ax, 'moderate_inf', aperture_radius=aperture_radius,
         models=[
-            NumericalPlotParams(smooth=2.2, label=None),
-            TrackedNumericalPlotParams(smooth=1.2, label=None),
+            NumericalPlotParams(smooth=4, label=None),
+            TrackedNumericalPlotParams(smooth=2.4, label=None),
                  ])
     ax.annotate(
         "$F_0 = +\\infty$", (0.29, 2.42),
@@ -109,9 +109,10 @@ def pdt_moderate_channels():
     plt.savefig(config.PLOTS_PATH / plot_file_name, **config.SAVEFIG_KWARGS)
 
 
-def pdt_strong_zap_channel():
-    channel_name = 'strong_zap'
-    aperture_radiuses = [0.06, 0.1, 0.14, 0.32]
+def pdt_strong_inf_channel():
+    channel_name = 'strong_inf'
+    # aperture_radiuses = [0.06, 0.1, 0.14, 0.32]
+    aperture_radiuses = [0.2, 0.35, 0.5, 1.10]
 
     print(f"Plotting pdt of '{channel_name}' channel, a: {aperture_radiuses}.")
     fig, axs = plt.subplots(2, 2, figsize=(4, 4.4))
@@ -128,8 +129,8 @@ def pdt_strong_zap_channel():
         ])
     _ = plot_pdt(axs[2], channel_name, aperture_radius=aperture_radiuses[2],
         models=[
-            NumericalPlotParams(smooth=4, label_pos=134, label_dy=-0.02),
-            BetaPlotParams(label_pos=42),
+            NumericalPlotParams(smooth=4, label_pos=131, label_dy=-0.02),
+            BetaPlotParams(label_pos=49),
         ])
     _ = plot_pdt(axs[3], channel_name, aperture_radius=aperture_radiuses[3],
         models=[
@@ -159,7 +160,7 @@ def pdt_strong_zap_channel():
         )
     fig.align_ylabels([axs[0], axs[2]])
     plt.subplots_adjust(hspace=0.14)
-    plt.savefig(config.PLOTS_PATH / 'strong_zap_pdt.pdf',
+    plt.savefig(config.PLOTS_PATH / 'strong_inf_pdt.pdf',
                 **config.SAVEFIG_KWARGS)
 
 
@@ -171,7 +172,7 @@ def ks_weak_zap_channel():
     plot_ks_values(ax, channel_name,
         models=[
             LognormalPlotParams(label_pos=18),
-            BeamWanderingPlotParams(label_pos=17, ks_smooth=4),
+            BeamWanderingPlotParams(label_pos=17, ks_smooth=4.5),
             BetaPlotParams(label_pos=13, label_dx=0.003),
             EllipticalBeamPlotParams(label_pos=23, ks_smooth=4),
             TotalProbabilityPlotParams(label_pos=14, ks_smooth=1),
@@ -217,7 +218,7 @@ def ks_moderate_zap_channel():
         ax, channel_name,
         models=[
             LognormalPlotParams(label_pos=5),
-            BeamWanderingPlotParams(label_pos=24, ks_smooth=2),
+            BeamWanderingPlotParams(label_pos=24, ks_smooth=4.5),
             BetaPlotParams(label_pos=9),
             EllipticalBeamPlotParams(label_pos=29, ks_smooth=1),
             TotalProbabilityPlotParams(label_pos=10, ks_smooth=1),
@@ -231,8 +232,8 @@ def ks_moderate_zap_channel():
                 **config.SAVEFIG_KWARGS)
 
 
-def ks_strong_zap_channel():
-    channel_name = 'strong_zap'
+def ks_strong_inf_channel():
+    channel_name = 'strong_inf'
 
     print(f"Plotting ks_values of '{channel_name}' channel.")
     _, ax = plt.subplots(1, 1, figsize=(4, 3))
@@ -246,11 +247,11 @@ def ks_strong_zap_channel():
             TotalProbabilityPlotParams(label_pos=19, ks_smooth=1),
             BetaTotalProbabilityPlotParams(label_pos=12, ks_smooth=1),
             NumEllipticalBeamPlotParams(label_pos=15, ks_smooth=1),
-            NumTotalProbabilityPlotParams(label_pos=41, ks_smooth=1),
-            NumBetaTotalProbabilityPlotParams(label_pos=36, ks_smooth=1),
+            NumTotalProbabilityPlotParams(label_pos=13, ks_smooth=1),
+            NumBetaTotalProbabilityPlotParams(label_pos=14, ks_smooth=1),
             ])
-    ax.set_ylim(0.02, 1)
-    plt.savefig(config.PLOTS_PATH / 'strong_zap_ks_values.pdf',
+    ax.set_ylim(0.015, 1)
+    plt.savefig(config.PLOTS_PATH / 'strong_inf_ks_values.pdf',
                 **config.SAVEFIG_KWARGS)
 
 
@@ -259,11 +260,11 @@ def run():
     pdt_weak_zap_channel()
     pdt_weak_inf_channel()
     pdt_moderate_channels()
-    pdt_strong_zap_channel()
+    pdt_strong_inf_channel()
     ks_weak_zap_channel()
     ks_weak_inf_channel()
     ks_moderate_zap_channel()
-    ks_strong_zap_channel()
+    ks_strong_inf_channel()
 
 
 if __name__ == "__main__":

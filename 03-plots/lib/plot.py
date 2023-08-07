@@ -110,7 +110,7 @@ def plot_ks_values(ax, channel_name, models):
     ax.grid(which='major', color='#BBBBBB', linestyle='-')
     ax.set_yscale('log')
     ax.set_ylabel("Kolmogorov-Smirnov statistic $D_M$")
-    ax.set_xlabel("Normed aperture radius "
+    ax.set_xlabel("Normalized aperture radius "
                   "$R_{{\\mathrm{{ap}}}} / W_{{\\mathrm{{LT}}}}$", labelpad=3)
     ax.set_xlim(left=0, right=ax.get_xlim()[1] * 0.98)
     ax.set_xticks(np.arange(0, ax.get_xlim()[1], 0.25))

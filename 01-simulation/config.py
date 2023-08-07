@@ -1,13 +1,13 @@
 import numpy as np
 from channels.moderate import moderate_inf, moderate_zap
-from channels.strong import strong_inf, strong_zap
+from channels.strong import strong_inf
 from channels.weak import weak_inf, weak_zap
 from pyatmosphere import gpu
 
 gpu.config['use_gpu'] = True
 
 DATA_PATH = './data'
-SIMULATION_SAVE_STEP = 10000
+SIMULATION_SAVE_STEP = 500
 CHANNELS = {
     'weak_zap': {
         'channel': weak_zap,
@@ -29,19 +29,14 @@ CHANNELS = {
         'iterations': 100000,
         'aperture_range': [round(x, 3) for x in np.linspace(0.001, 0.065, 65)]
     },
-    'strong_zap': {
-        'channel': strong_zap,
-        'iterations': 100000,
-        'aperture_range': [round(x, 2) for x in np.linspace(0.01, 0.50, 50)]
-    },
     'strong_inf': {
         'channel': strong_inf,
         'iterations': 100000,
-        'aperture_range': [round(x, 2) for x in np.linspace(0.01, 0.50, 50)]
+        'aperture_range': [round(x, 2) for x in np.linspace(0.05, 1.5, 30)]
     },
 }
 
-SEMIANALYTICAL_ITERATIONS = 1000
+SEMIANALYTICAL_ITERATIONS = 5000
 
 # to determine the beam wandering value
 PRELIMINARY_SIMULATION_ITERATIONS = 1000
