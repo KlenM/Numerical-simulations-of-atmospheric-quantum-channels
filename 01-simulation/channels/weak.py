@@ -43,8 +43,8 @@ weak_inf = Channel(
     phase_screen=SSPhaseScreen(
       model=MVKModel(
         Cn2=5e-15,
-        l0=80,
-        L0=1e3,
+        l0=1e-3,
+        L0=80,
       ),
       f_grid=RandLogPolarGrid(
         points=2**10,
